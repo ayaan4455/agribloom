@@ -3,6 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
+interface PriceItem {
+  date: string;
+  mandi: string;
+  minPrice: string;
+  maxPrice: string;
+  modalPrice: string;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const crop = searchParams.get("crop");
@@ -23,7 +31,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "No data", stale: true }, { status: 404 });
     }
 
-    const prices: any[] = [];
+    const prices: PriceItem[] = [];
     rows.each((_, row) => {
       const cols = $(row).find("td");
       prices.push({
@@ -36,7 +44,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({ crop, state, district, prices, updated: true });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Fetch failed" }, { status: 500 });
   }
 }

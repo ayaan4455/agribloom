@@ -57,8 +57,8 @@ export const sendEmail = async ({
     });
 
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Email sending error:", error);
-    throw new Error(error.message || "Failed to send email");
+    throw new Error((error as Error).message || "Failed to send email");
   }
 };

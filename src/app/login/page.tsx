@@ -8,8 +8,8 @@ import { Sprout } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
@@ -38,8 +38,8 @@ export default function LoginPage() {
       } else {
         router.push("/complete-profile");
       }
-    } catch (error: any) {
-      const msg = error.response?.data?.message;
+    } catch (error: unknown) {
+      const msg = (error as { response?: { data?: { message?: string } } }).response?.data?.message;
 
       if (msg === "User doesn’t exist, please sign up") {
         toast.error("User doesn’t exist, please sign up.");

@@ -14,8 +14,13 @@ interface DecodedToken {
   // other fields are ignored since we're not returning them
 }
 
-export const getDataFromToken = (request: NextRequest): string => {
-  const token = request.cookies.get("token")?.value;
+export const getDataFromToken = (request: NextRequest | string): string => {
+  let token: string | undefined;
+  if (typeof request === "string") {
+    token = request;
+  } else {
+    token = request.cookies.get("token")?.value;
+  }
 
   // console.log("✅ Cookie received:", token);
 
@@ -26,7 +31,7 @@ export const getDataFromToken = (request: NextRequest): string => {
   try {
     const decodedToken = jwt.verify(token, secret) as DecodedToken;
     return decodedToken.id; // ✅ Only returning the ID
-  } catch (error: any) {
-    throw new Error(error.message || "Token verification failed");
+  } catch (error: unknown) {
+    throw new Error((error as Error).message || "Token verification failed");
   }
 };

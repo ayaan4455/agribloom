@@ -7,9 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Home, Pencil } from "lucide-react";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
+interface User {
+  username: string;
+  email: string;
+  favoriteVegetable?: string;
+  favoriteFruit?: string;
+  favoriteTree?: string;
+  favoriteFlower?: string;
+  favoriteSeason?: string;
+  favoriteActivity?: string;
+  profileCompleted: boolean;
+}
+
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -22,8 +34,8 @@ export default function ProfilePage() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to fetch profile");
         setUser(data.data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError((err as Error).message);
       }
     };
 

@@ -45,10 +45,10 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { message: (error as Error).message || "Internal server error" },
       { status: 500 }
     );
   }

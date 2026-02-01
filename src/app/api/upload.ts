@@ -9,7 +9,7 @@ import type { Express } from "express";
 
 // 👇 Correctly import next-connect using require to avoid TS ESM default import issues
 const nextConnect = require("next-connect") as typeof import("next-connect");
-const handler = (nextConnect as any)(); // 👈 avoid passing type arguments
+const handler = (nextConnect as any)();
 
 // ✅ Ensure "public/uploads" folder exists
 const uploadDir = path.join(process.cwd(), "public/uploads");
@@ -43,11 +43,7 @@ handler.post(
       }
 
       // ✅ Use safe mock for NextRequest-like cookie getter
-      const userId = getDataFromToken({
-        cookies: {
-          get: () => ({ value: token }),
-        },
-      } as any);
+      const userId = getDataFromToken(token);
 
       // ✅ Use dummy image if no image is uploaded
       const fileUrl = req.file
@@ -61,8 +57,8 @@ handler.post(
       ).select("-password");
 
       res.status(200).json({ message: "Image uploaded", user: updatedUser });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message || "Upload failed" });
+    } catch (error: unknown) {
+      res.status(500).json({ error: (error as Error).message || "Upload failed" });
     }
   }
 );

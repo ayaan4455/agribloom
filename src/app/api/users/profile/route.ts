@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     const userId = await getDataFromToken(request);
     const user = await User.findById(userId).select("-password");
     return NextResponse.json({ message: "User found", data: user });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: (error as Error).message }, { status: 401 });
   }
 }
 
@@ -20,7 +20,7 @@ export async function PATCH(request: NextRequest) {
     const userId = await getDataFromToken(request);
     const body = await request.json();
 
-    const updates: any = {};
+    const updates: Record<string, unknown> = {};
 
     // Only assign fields if they exist in the request body
     const fields = [
@@ -60,7 +60,7 @@ export async function PATCH(request: NextRequest) {
     }).select("-password");
 
     return NextResponse.json({ message: "Profile updated", user: updatedUser });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: (error as Error).message }, { status: 400 });
   }
 }

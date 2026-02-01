@@ -2,6 +2,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import { TracingBeam } from "@/components/ui/tracing-beam";
+import Image from "next/image";
 
 const dummyContent = [
   {
@@ -139,11 +140,11 @@ export default function FarmingTechniquesPage() {
 
             <div className="prose prose-lg text-gray-700">
               {item?.image && (
-                <img
+                <Image
                   src={item.image}
                   alt="farming technique"
-                  height="600"
-                  width="600"
+                  height={600}
+                  width={600}
                   className="rounded-lg mb-10 object-cover max-h-[400px] w-full"
                 />
               )}

@@ -3,11 +3,24 @@
 import { useState } from "react";
 import axios from "axios";
 
+interface PriceItem {
+  mandi: string;
+  date: string;
+  minPrice: number;
+  maxPrice: number;
+  modalPrice: number;
+}
+
+interface ApiResponse {
+  prices?: PriceItem[];
+  stale?: boolean;
+}
+
 export default function AgriPrices() {
   const [crop, setCrop] = useState("");
   const [state, setState] = useState("");
   const [district, setDistrict] = useState("");
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState("");
 
   const capitalize = (str: string) =>
@@ -26,10 +39,10 @@ export default function AgriPrices() {
         },
       });
       setData(res.data);
-    } catch (err: any) {
+    } catch (error: unknown) {
       setError(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
+        (error as { response?: { data?: { message?: string; error?: string } } }).response?.data?.message ||
+          (error as { response?: { data?: { message?: string; error?: string } } }).response?.data?.error ||
           "Unknown error"
       );
     }
@@ -73,13 +86,13 @@ export default function AgriPrices() {
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      {data?.prices?.length > 0 && (
+      {data?.prices && data.prices.length > 0 && (
         <div className="mt-6 space-y-4">
           <h2 className="text-xl font-semibold">
             Prices for {capitalize(crop)} ({capitalize(district)},{" "}
             {capitalize(state)})
           </h2>
-          {data.prices.map((item: any, i: number) => (
+          {data.prices.map((item: PriceItem, i: number) => (
             <div
               key={i}
               className="p-4 border border-gray-300 rounded bg-gray-50"

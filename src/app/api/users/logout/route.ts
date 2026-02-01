@@ -18,9 +18,9 @@ export async function GET() {
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: error.message || "Logout failed" },
+      { message: (error as { message: string }).message || "Logout failed" },
       { status: 500 }
     );
   }

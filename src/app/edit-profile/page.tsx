@@ -63,8 +63,8 @@ export default function EditProfilePage() {
           favoriteSeason: data.data.favoriteSeason || "",
           favoriteActivity: data.data.favoriteActivity || "",
         });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }

@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
       message: "User registered successfully. Please check your email.",
       success: true,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: error.message || "Something went wrong" },
+      { message: (error as Error).message || "Something went wrong" },
       { status: 500 }
     );
   }
